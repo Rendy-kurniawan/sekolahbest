@@ -1,8 +1,10 @@
 <?php if (!defined('BASEPATH'))
     exit('No direct script access allowed');
 
-class Login extends CI_Controller {
-    function __construct() {
+class Login extends CI_Controller
+{
+    function __construct()
+    {
         parent::__construct();
         $this->load->model('crud_model');
         $this->load->database();
@@ -13,7 +15,8 @@ class Login extends CI_Controller {
         $this->output->set_header("Expires: Mon, 26 Jul 2010 05:00:00 GMT");
     }
 
-    public function index() {
+    public function index()
+    {
 
         if ($this->session->userdata('admin_login') == 1)
             redirect(base_url() . 'index.php?admin/admin_dashboard', 'refresh');
@@ -23,17 +26,18 @@ class Login extends CI_Controller {
 
         if ($this->session->userdata('student_login') == 1)
             redirect(base_url() . 'index.php?student/student_dashboard', 'refresh');
-        
+
         if ($this->session->userdata('parent_login') == 1)
             redirect(base_url() . 'index.php?parents/parents_dashboard', 'refresh');
 
         $this->load->view('backend/login');
     }
 
-    function ajax_login() {
+    function ajax_login()
+    {
         $response = array();
         $email = $_POST["email"];
-        $password = sha1($_POST["password"]);
+        $password = md5($_POST["password"]);
         $response['submitted_data'] = $_POST;
         $login_status = $this->validate_login($email, $password);
         $response['login_status'] = $login_status;
@@ -43,7 +47,8 @@ class Login extends CI_Controller {
         echo json_encode($response);
     }
 
-    function validate_login($email = '', $password = '') {
+    function validate_login($email = '', $password = '')
+    {
         $credential = array('username' => $email, 'password' => $password);
         $query = $this->db->get_where('admin', $credential);
         if ($query->num_rows() > 0) {
@@ -88,11 +93,13 @@ class Login extends CI_Controller {
         return 'invalid';
     }
 
-    function four_zero_four() {
+    function four_zero_four()
+    {
         $this->load->view('four_zero_four');
     }
-	
-    function logout() {
+
+    function logout()
+    {
         $this->session->sess_destroy();
         $this->session->set_flashdata('logout_notification', 'logged_out');
         redirect(base_url(), 'refresh');
